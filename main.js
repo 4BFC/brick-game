@@ -104,7 +104,7 @@ function collisionDetection() {
                     score++;
                     if(score === brickRowCount * brickColumnCount) {
                         alert('축하합니다! 모든 벽돌을 깼어요!');
-                        document.location.reload();
+                        window.location.reload();
                     }
                 }
             }
@@ -171,7 +171,7 @@ function draw() {
             dy = -dy;
         } else {
             alert('게임 오버!');
-            document.location.reload();
+            window.location.reload();
         }
     }
 
