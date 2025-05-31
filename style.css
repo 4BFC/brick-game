@@ -17,3 +17,13 @@ canvas {
     height: 320px;
     touch-action: none;
 }
+
+/* 미디어쿼리로 모바일 대응 */
+@media (max-width: 600px) {
+    canvas {
+        width: 98vw;
+        height: 60vw;
+        max-width: 100vw;
+        max-height: 70vh;
+    }
+}
