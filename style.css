@@ -11,4 +11,9 @@ canvas {
     display: block;
     border: 2px solid #444;
     box-shadow: 0 0 20px #000a;
+    max-width: 98vw;
+    max-height: 80vh;
+    width: 480px;
+    height: 320px;
+    touch-action: none;
 }
