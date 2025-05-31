@@ -1,18 +1,15 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// 벽돌/공/패들 크기 등 비율 기반 변수
 let brickRowCount = 3;
 let brickColumnCount = 5;
 let brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft;
 let ballRadius, paddleHeight, paddleWidth;
 
-// paddleX만 var로 선언 (호이스팅 및 undefined 허용)
 var paddleX;
 let rightPressed = false, leftPressed = false;
 
 function setDynamicSizes() {
-    // canvas 기준 비율로 동적 크기 설정
     brickWidth = canvas.width / (brickColumnCount + 1);
     brickHeight = canvas.height / 16;
     brickPadding = brickWidth * 0.1;
@@ -29,24 +26,20 @@ function resizeCanvas() {
     canvas.width = w;
     canvas.height = h;
     setDynamicSizes();
-    // 패들 위치 재조정
     paddleX = (canvas.width - paddleWidth) / 2;
 }
 
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// 공
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
 
-// 터치 컨트롤 변수
 let isTouching = false;
 let lastTouchX = null;
 
-// 벽돌
 let bricks = [];
 function initBricks() {
     bricks = [];
@@ -59,8 +52,8 @@ function initBricks() {
 }
 initBricks();
 
-// 점수
 let score = 0;
+let isGameOver = false;
 
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
@@ -166,7 +159,18 @@ function drawScore() {
     ctx.fillText('점수: ' + score, 8, 20);
 }
 
+function drawGameOver() {
+    ctx.font = "32px Arial";
+    ctx.fillStyle = "#d32f2f";
+    ctx.textAlign = "center";
+    ctx.fillText("게임 오버!", canvas.width/2, canvas.height/2);
+}
+
 function draw() {
+    if (isGameOver) {
+        drawGameOver();
+        return;
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
     drawBall();
@@ -184,8 +188,9 @@ function draw() {
         if(x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
         } else {
-            //alert('게임 오버!');
-            window.location.reload();
+            isGameOver = true;
+            drawGameOver();
+            return;
         }
     }
 
