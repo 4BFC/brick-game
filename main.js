@@ -1,6 +1,16 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// 모바일 대응: 화면 크기 조정
+function resizeCanvas() {
+    let w = Math.min(window.innerWidth * 0.98, 480);
+    let h = Math.min(window.innerHeight * 0.8, 320);
+    canvas.width = w;
+    canvas.height = h;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
 // 공
 let ballRadius = 8;
 let x = canvas.width / 2;
@@ -14,6 +24,10 @@ const paddleWidth = 75;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
+
+// 터치 컨트롤 변수
+let isTouching = false;
+let lastTouchX = null;
 
 // 벽돌
 const brickRowCount = 3;
@@ -34,10 +48,11 @@ for(let c = 0; c < brickColumnCount; c++) {
 // 점수
 let score = 0;
 
-// 이벤트 리스너
-
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
+canvas.addEventListener('touchstart', touchStartHandler, false);
+canvas.addEventListener('touchmove', touchMoveHandler, false);
+canvas.addEventListener('touchend', touchEndHandler, false);
 
 function keyDownHandler(e) {
     if(e.key === 'Right' || e.key === 'ArrowRight') {
@@ -54,6 +69,28 @@ function keyUpHandler(e) {
     else if(e.key === 'Left' || e.key === 'ArrowLeft') {
         leftPressed = false;
     }
+}
+
+function touchStartHandler(e) {
+    if(e.touches.length === 1) {
+        isTouching = true;
+        lastTouchX = e.touches[0].clientX;
+    }
+}
+function touchMoveHandler(e) {
+    if(isTouching && e.touches.length === 1) {
+        let touchX = e.touches[0].clientX;
+        let deltaX = touchX - lastTouchX;
+        paddleX += deltaX * (canvas.width / window.innerWidth);
+        if(paddleX < 0) paddleX = 0;
+        if(paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+        lastTouchX = touchX;
+        e.preventDefault();
+    }
+}
+function touchEndHandler(e) {
+    isTouching = false;
+    lastTouchX = null;
 }
 
 function collisionDetection() {
