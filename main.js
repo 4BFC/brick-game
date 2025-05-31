@@ -7,6 +7,9 @@ let brickColumnCount = 5;
 let brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft;
 let ballRadius, paddleHeight, paddleWidth;
 
+// 패들 관련 변수는 여기서 먼저 선언
+let paddleX, rightPressed = false, leftPressed = false;
+
 function setDynamicSizes() {
     // canvas 기준 비율로 동적 크기 설정
     brickWidth = canvas.width / (brickColumnCount + 1);
@@ -29,6 +32,7 @@ function resizeCanvas() {
     paddleX = (canvas.width - paddleWidth) / 2;
 }
 
+// 패들X를 먼저 초기화하지 않고, resizeCanvas에서 초기화하도록 변경
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
@@ -37,11 +41,6 @@ let x = canvas.width / 2;
 let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
-
-// 패들
-let paddleX = (canvas.width - (paddleWidth || 75)) / 2;
-let rightPressed = false;
-let leftPressed = false;
 
 // 터치 컨트롤 변수
 let isTouching = false;
