@@ -7,8 +7,8 @@ let brickColumnCount = 5;
 let brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft;
 let ballRadius, paddleHeight, paddleWidth;
 
-// 패들 관련 변수는 여기서 먼저 선언
-let paddleX; // undefined로 선언
+// paddleX만 var로 선언 (호이스팅 및 undefined 허용)
+var paddleX;
 let rightPressed = false, leftPressed = false;
 
 function setDynamicSizes() {
@@ -30,15 +30,10 @@ function resizeCanvas() {
     canvas.height = h;
     setDynamicSizes();
     // 패들 위치 재조정
-    console.log('resizeCanvas - paddleWidth:', paddleWidth, 'canvas.width:', canvas.width);
     paddleX = (canvas.width - paddleWidth) / 2;
-    console.log('resizeCanvas - paddleX:', paddleX);
 }
 
-// 로그로 paddleX 선언 시점과 값을 확인
-console.log('선언 직후 paddleX:', paddleX);
 resizeCanvas();
-console.log('resizeCanvas 이후 paddleX:', paddleX);
 window.addEventListener('resize', resizeCanvas);
 
 // 공
