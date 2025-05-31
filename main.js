@@ -184,7 +184,7 @@ function draw() {
         if(x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
         } else {
-            alert('게임 오버!');
+            //alert('게임 오버!');
             window.location.reload();
         }
     }
