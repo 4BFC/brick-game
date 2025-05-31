@@ -1,27 +1,45 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// 모바일 대응: 화면 크기 조정
+// 벽돌/공/패들 크기 등 비율 기반 변수
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth, brickHeight, brickPadding, brickOffsetTop, brickOffsetLeft;
+let ballRadius, paddleHeight, paddleWidth;
+
+function setDynamicSizes() {
+    // canvas 기준 비율로 동적 크기 설정
+    brickWidth = canvas.width / (brickColumnCount + 1);
+    brickHeight = canvas.height / 16;
+    brickPadding = brickWidth * 0.1;
+    brickOffsetTop = canvas.height * 0.08;
+    brickOffsetLeft = brickWidth * 0.5;
+    ballRadius = Math.max(6, canvas.width / 60);
+    paddleHeight = Math.max(8, canvas.height / 32);
+    paddleWidth = Math.max(60, canvas.width / 5);
+}
+
 function resizeCanvas() {
     let w = Math.min(window.innerWidth * 0.98, 480);
     let h = Math.min(window.innerHeight * 0.8, 320);
     canvas.width = w;
     canvas.height = h;
+    setDynamicSizes();
+    // 패들 위치 재조정
+    paddleX = (canvas.width - paddleWidth) / 2;
 }
+
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 // 공
-let ballRadius = 8;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
 
 // 패들
-const paddleHeight = 10;
-const paddleWidth = 75;
-let paddleX = (canvas.width - paddleWidth) / 2;
+let paddleX = (canvas.width - (paddleWidth || 75)) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
@@ -30,20 +48,17 @@ let isTouching = false;
 let lastTouchX = null;
 
 // 벽돌
-const brickRowCount = 3;
-const brickColumnCount = 5;
-const brickWidth = 75;
-const brickHeight = 20;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
 let bricks = [];
-for(let c = 0; c < brickColumnCount; c++) {
-    bricks[c] = [];
-    for(let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
+function initBricks() {
+    bricks = [];
+    for(let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for(let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
     }
 }
+initBricks();
 
 // 점수
 let score = 0;
